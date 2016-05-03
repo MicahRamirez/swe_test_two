@@ -1,0 +1,140 @@
+==========
+Question 1
+==========
+
+A function f is defined as:
+
+  @pre_f
+  @post_f
+  def f(n):
+    # x = ...computation...
+    return x
+
+The function pre_f checks the pre-condition that n is greater than 0, and
+asserts false if n is not.
+
+The function post_f checks the post-conditions that the x returned is greater
+than 0, and asserts false if x is not.
+
+Write pre_f and post_f.
+
+
+==========
+Question 2
+==========
+
+A function g is defined as:
+
+  @cache_g
+  def g(n):
+    # x = ...computation...
+    return x
+
+The value returned by g is consistent for each n. For example, g(n) will always
+return y, and g(n) will not return any value other than y. 
+
+cache_g is a *class* that stores the return values of g for any n. If g(n) is
+called for the first time, computation is done to return the value x.
+If g(n) is called again, *no* computation is done and the return value is
+retrived from the cache.
+
+Write cache_g.
+
+
+==========
+Question 3
+==========
+
+A programmmer is working with Java classes defined below:
+
+  class Entree {}
+  class VegetarianEntree extends Entree {}
+
+  class Menu {
+    private List<Entree> _entrees = new ArrayList<Entree>();
+
+    public void addEntree(Entree p) {
+      _entrees.add(p);
+    }
+
+    public Entree getEntree(int i) {
+      return _entrees.get(i);
+    }
+  }
+
+  class Restaurant {
+    public static Menu createMenu() {
+      Menu m = new Menu();
+      m.addEntree(new Entree());
+      return m;
+    }
+
+    public static Menu createVegetarianMenu() {
+      Menu m = new Menu();
+      m.addEntree(new VegetarianEntree());
+      return m;
+    }
+  }
+
+The programmer wants to refactor these classes to remove the redundant code
+in createMenu() and createVegetarianMenu(). He does the following:
+
+  abstract class Restaurant {
+    public static Menu createMenu(MenuFactory mf) {
+      Menu m = new Menu();
+      m.addEntree(mf.makeEntree());
+      return m;
+    }
+  }
+
+  {
+    MenuFactory mf = new MenuFactory();
+    Menu m = Restaurant.createMenu(mf);
+    assert m.getClass() == Menu.class;
+    assert m.getEntree(0).getClass() == Entree.class;
+  }
+
+  {
+    MenuFactory mf = new VegetarianMenuFactory();
+    Menu m = Restaurant.createMenu(mf);
+    assert m.getClass() = VegetarianMenu.class;
+    assert m.getEntree(0).getClass() == VegetarianEntree.class;
+  }
+
+Based off the code above, write the MenuFactory and VegetarianMenuFactory
+classes.
+
+
+==========
+Question 4
+==========
+
+Refer to the Java classes defined in the previous question. The programmer
+decides to make use of clone() in the refactoring and writes the following:
+
+  abstract class Restaurant {
+    public static Menu createMenu(MenuPrototype mp) {
+      Menu m = new Menu();
+      m.addEntree(mf.makeEntree());
+      return m;
+    }
+  }
+
+  {
+    MenuPrototype mp = new MenuPrototype(new Entree())
+    Menu m = Restaurant.createMenu(mp);
+    assert m.getClass() == Menu.class;
+    assert m.getEntree(0).getClass() == Entree.class;
+  }
+
+  {
+    MenuPrototype mp = new MenuPrototype(new VegetarianEntree())
+    Menu m = Restaurant.createMenu(mp);
+    assert m.getClass() == Menu.class;
+    assert m.getEntree(0).getClass() == VegetarianEntree.class;
+  }
+
+Based off the code above, re-write the Entree and VegetarianEntree classes. Both
+of these *must* define and override Object's clone() method. Then, write the
+MenuPrototype class. This class must define a constructor, and a makeEntree()
+method that uses clone().
